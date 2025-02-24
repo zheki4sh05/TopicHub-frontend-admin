@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {useGetHubsQuery } from "../api/request";
+import {useDeleteHubMutation, useGetHubsQuery } from "../api/request";
 import { baseApi } from "../../../app/util/api";
 
 function Hubs() {
@@ -20,7 +20,9 @@ function Hubs() {
       setShowCreate(true);
     };
 
-    const {data,error, isLoading} =useGetHubsQuery()
+    const {data,error, isLoading} = useGetHubsQuery()
+
+    const [deleteHub, {isLoadingDel}] = useDeleteHubMutation()
 
     if(isLoading){
         return (
@@ -36,6 +38,13 @@ function Hubs() {
               <p>{error.data?.message || "Unknown error"}</p>
             </div>
           );
+    }
+
+    const handleDeleteHub=(id)=>{
+      if(!id){
+        return
+      }
+      deleteHub(id)
     }
 
     return ( 
@@ -63,10 +72,9 @@ function Hubs() {
                     <button className="btn btn-warning" style={{ marginRight: '10px' }} onClick={() => handleEditShow(hub)}>
                       Edit
                     </button>
-                    <form className="delete-form" action={`/api/v1/admin/hub?id=${hub.id}`} method="post">
-                      <input type="hidden" name="_method" value="DELETE" />
-                      <button className="btn btn-danger" type="submit">Удалить</button>
-                    </form>
+                    <button className="btn btn-error"  onClick={() =>handleDeleteHub(hub)}>
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
