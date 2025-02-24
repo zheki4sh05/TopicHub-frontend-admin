@@ -5,7 +5,7 @@ function Menu() {
 
 
     return ( 
-    <div style={{position:"absolute", top:"40px", left:"20px"}}>
+    <div style={{position:"absolute", top:"100px", left:"20px"}}>
          <ul className="" aria-labelledby="dropdownMenuButton">
       <li><Link  to={{ pathname: PathConstants.HOME }}>Главная</Link></li>
       <li><Link  to={{ pathname: PathConstants.HUBS }}>Хабы</Link></li>

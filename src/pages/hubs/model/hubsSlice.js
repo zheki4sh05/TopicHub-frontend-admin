@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import DomainNames from "../../../app/store/DomainNames";
-import { createHubs, doDeleteHubs, doUpdateHubs } from "../api/request";
-import { fetchHubs } from "../../../pages/Article/api/requests";
+import { createHubs, doDeleteHubs, doUpdateHubs, fetchHubs } from "../api/request";
+import { domainNames } from "../../../app/constants/domainNames";
+
 //----state---
 const initialState = {
-  list: [],
+  list: [{
+    id:"1",
+    ru:"ru",
+    en:"en"
+  }],
   status: "idle",
   error: null,
 };
@@ -12,7 +16,7 @@ const initialState = {
 
 
 const hubsSlice = createSlice({
-  name: DomainNames.hubs,
+  name: domainNames.HUBS,
   initialState,
   reducers: {
 
@@ -82,7 +86,14 @@ const hubsSlice = createSlice({
 
 
 export function getHubsList(state) {
-  return state[DomainNames.hubs].list;
+  return state[domainNames.HUBS].list;
+}
+
+export function getHubsState(state){
+    return state[domainNames.HUBS].state;
+}
+export function getHubsError(state){
+    return state[domainNames.HUBS].error;
 }
 
 

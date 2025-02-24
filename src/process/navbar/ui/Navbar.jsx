@@ -1,7 +1,7 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 import { Link } from "react-router";
 import { PathConstants } from "../../../app/constants/pathConstants";
+import LanguageSelect from "../../../feature/language/ui/LanguageSelector";
 
 function Navbar() {
   return (
@@ -25,6 +25,9 @@ function Navbar() {
 
                 <div className="ml-auto">
                   <a className="nav-link text-white">Вернуться в приложение</a>
+                </div>
+                <div>
+                  <LanguageSelect/>
                 </div>
               </div>
             </nav>

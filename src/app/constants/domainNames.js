@@ -1,3 +1,4 @@
 export const domainNames = {
-    HUBS:"hubs"
+    HUBS:"hubs",
+    SETTINGS:"settings"
 }

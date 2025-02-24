@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { baseApi } from "../util/api";
-
+import { domainNames } from "../constants/domainNames";
+import hubsSlice from "../../pages/hubs/model/hubsSlice"
+import settingsSlice from "../../process/navbar/model/settingsSlice"
 export const store =  configureStore({
     reducer:{
-      [baseApi.reducerPath]:baseApi.reducer
+      [domainNames.HUBS]:hubsSlice,
+      [domainNames.SETTINGS]:settingsSlice
     },
     
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware)
    
 })

@@ -1,9 +1,11 @@
-import { useState } from "react";
-import {useDeleteHubMutation, useGetHubsQuery } from "../api/request";
-import { baseApi } from "../../../app/util/api";
+import { useEffect, useState } from "react";
+import useControlHub from "../api/hook/useControlHub";
+import { fetchHubs } from "../api/request";
+
+
 
 function Hubs() {
-
+    const {dispatch, isLoading, hubs, error, loaded} = useControlHub()
     const [showEdit, setShowEdit] = useState(false);
     const [showCreate, setShowCreate] = useState(false);
     const [currentHub, setCurrentHub] = useState({ id: '', ru: '', en: '' });
@@ -20,9 +22,11 @@ function Hubs() {
       setShowCreate(true);
     };
 
-    const {data,error, isLoading} = useGetHubsQuery()
-
-    const [deleteHub, {isLoadingDel}] = useDeleteHubMutation()
+    useEffect(()=>{
+      if(!loaded){
+        dispatch(fetchHubs())
+      }
+    },[])
 
     if(isLoading){
         return (
@@ -31,20 +35,20 @@ function Hubs() {
 </div>
         )
     }
-    if(error){
-        return (
-            <div>
-              <p>Error occurred: {error.status}</p>
-              <p>{error.data?.message || "Unknown error"}</p>
-            </div>
-          );
-    }
+    // if(!error){
+    //     return (
+    //         <div>
+    //           <p>Error occurred: {error.status}</p>
+    //           <p>{error.data?.message || "Unknown error"}</p>
+    //         </div>
+    //       );
+    // }
 
     const handleDeleteHub=(id)=>{
       if(!id){
         return
       }
-      deleteHub(id)
+    
     }
 
     return ( 
@@ -62,7 +66,7 @@ function Hubs() {
             </tr>
           </thead>
           <tbody id="tableBody">
-            {data.map((hub) => (
+            {hubs.map((hub) => (
               <tr key={hub.id}>
                 <td>{hub.id}</td>
                 <td>{hub.en}</td>
