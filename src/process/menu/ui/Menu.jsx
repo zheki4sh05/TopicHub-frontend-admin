@@ -1,8 +1,10 @@
 import { Link } from "react-router";
 import { PathConstants } from "../../../app/constants/pathConstants";
+import { Box, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 function Menu() {
-
+    const { t } = useTranslation();
 
     return ( 
     <div style={{position:"absolute", top:"100px", left:"20px"}}>
@@ -14,6 +16,9 @@ function Menu() {
       <li><Link  to={{ pathname: PathConstants.COMPLAINTS }}>Жалобы</Link></li>
     </ul>
     </div>
+   
+
+
     
 );
 }

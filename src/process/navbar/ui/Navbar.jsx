@@ -2,6 +2,7 @@
 import { Link } from "react-router";
 import { PathConstants } from "../../../app/constants/pathConstants";
 import LanguageSelect from "../../../feature/language/ui/LanguageSelector";
+import LogoutBtn from "../../../feature/logout/ui/LogoutBtn";
 
 function Navbar() {
   return (
@@ -28,6 +29,9 @@ function Navbar() {
                 </div>
                 <div>
                   <LanguageSelect/>
+                </div>
+                <div>
+                  <LogoutBtn/>
                 </div>
               </div>
             </nav>

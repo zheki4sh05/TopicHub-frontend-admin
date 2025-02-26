@@ -70,10 +70,14 @@ const hubsSlice = createSlice({
     })
     .addCase(doUpdateHubs.fulfilled, (state, action) => {
       state.status = "succeeded";
-
-      const { id, name } = action.payload; 
+      
+      const { id, en, ru } = action.payload; 
       const item = state.list.find(item => item.id === id); 
-      if (item) { item.name = name; }
+      if (item) { 
+        item.en = en;
+        item.ru = ru;
+
+       }
  
     })
     .addCase(doUpdateHubs.rejected, (state, action) => {

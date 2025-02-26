@@ -5,6 +5,7 @@ import { PathConstants } from './constants/pathConstants';
 import Layout from './layout/ui/Layout';
 import Main from '../pages/main/ui/Main';
 import Hubs from '../pages/hubs/ui/Hubs';
+import Articles from '../pages/articles/ui/Articles';
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +21,10 @@ function App() {
         {
           path: PathConstants.HUBS,
           element: <Hubs />,
+        },
+        {
+          path:PathConstants.ARTICLES,
+          element:<Articles/>
         }
       
       ],

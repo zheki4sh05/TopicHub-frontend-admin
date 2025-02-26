@@ -41,6 +41,7 @@ class ApiRequestCreator {
       async (initial, thunkAPI) => {
     
         try {
+        
           const response = await api.post(
             this.url.concat(uri),
             initial,
@@ -48,6 +49,7 @@ class ApiRequestCreator {
           );
           return response.data;
         } catch (error) {
+          
           return thunkAPI.rejectWithValue({ error: error.response });
         }
       }
@@ -80,9 +82,10 @@ class ApiRequestCreator {
   createPatchRequest(uri) {
     
     return createAsyncThunk(this.domainName.concat(uri), async (initial, thunkAPI) => {
+ 
       const response = await api.patch(
         this.url.concat(uri),
-        initial.data,
+        initial,
         getRequestConfig(thunkAPI.getState().settings.activeLanguage)
       );
       return response.data;

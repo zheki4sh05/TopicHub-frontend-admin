@@ -1,16 +1,16 @@
 
-import { getRefresh, getToken, setRefresh, setToken } from "../../pages/Profile/model/userSlice";
+import { getRefresh, getToken, setRefresh, setToken } from "../../pages/login/model/userSlice";
+import apiPaths from "../constants/apiPaths";
 import api from "./api";
-import apiPath from "./apiPath";
 import { saveTokens } from "./localstorageApi";
 const MAX_RETRY_COUNT = 3; 
 
 export const getState = store => store.getState();
-const refreshUrl = apiPath.token.url
+const refreshUrl = apiPaths.token.url
 
 const hasKey=(obj)=>{
   const keys = Object.keys(obj);
-  if ('Authorization' in obj) {
+  if ('Authorization' in keys) {
    return true
 } else {
   return false

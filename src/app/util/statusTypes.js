@@ -8,7 +8,10 @@ const statusTypes = {
     user:"USER",
     admin:"ADMIN",
     online:"online",
-    offline:"offline"
+    offline:"offline",
+    moderation:"MODERATION",
+    publish:"PUBLISH",
+    block:"BLOCK"
 }
 
 export default statusTypes;

@@ -1,159 +1,149 @@
 import { useEffect, useState } from "react";
 import useControlHub from "../api/hook/useControlHub";
-import { fetchHubs } from "../api/request";
-
-
+import { createHubs, doDeleteHubs, doUpdateHubs, fetchHubs } from "../api/request";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import Menu from "../../../process/menu/ui/Menu";
+import Modal from "../../../shared/modal/ui/Modal";
+import HubForm from "../../../widget/hub/ui/HubForm";
 
 function Hubs() {
-    const {dispatch, isLoading, hubs, error, loaded} = useControlHub()
-    const [showEdit, setShowEdit] = useState(false);
-    const [showCreate, setShowCreate] = useState(false);
-    const [currentHub, setCurrentHub] = useState({ id: '', ru: '', en: '' });
-  
-    const handleEditClose = () => setShowEdit(false);
-    const handleEditShow = (hub) => {
-      setCurrentHub(hub);
-      setShowEdit(true);
-    };
-  
-    const handleCreateClose = () => setShowCreate(false);
-    const handleCreateShow = () => {
-      setCurrentHub({ id: '', ru: '', en: '' });
-      setShowCreate(true);
-    };
+  const { dispatch, isLoading, hubs, error, loaded } = useControlHub();
+  const [showCreate, setShowCreate] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setDeleteEdit] = useState(false);
+  const [activeHub, setActiveHub] = useState({});
+  useEffect(()=>{
+    dispatch(fetchHubs())
+  },[])
+  const handleClose = () => {
+    setShowEdit(false);
+    setDeleteEdit(false);
+    setShowCreate(false);
+  };
 
-    useEffect(()=>{
-      if(!loaded){
-        dispatch(fetchHubs())
-      }
-    },[])
+  const handleCreate = () => {
+    setShowCreate(true);
+  };
 
-    if(isLoading){
-        return (
-            <div className="spinner-border" role="status">
-  <span className="visually-hidden">Loading...</span>
-</div>
-        )
-    }
-    // if(!error){
-    //     return (
-    //         <div>
-    //           <p>Error occurred: {error.status}</p>
-    //           <p>{error.data?.message || "Unknown error"}</p>
-    //         </div>
-    //       );
-    // }
+  const handleEdit = (hub) => {
+    setActiveHub(hub);
+    setShowEdit(true);
+  };
 
-    const handleDeleteHub=(id)=>{
-      if(!id){
-        return
-      }
-    
-    }
+  const handleDelete = (hub) => {
+    setActiveHub(hub);
+    setDeleteEdit(true)
+  };
 
-    return ( 
+  const handleDispatchSave = (hub) => {
+    dispatch(createHubs(hub));
+    handleClose();
+  };
+
+  const handleDispatchEdit = (hub) => {
+    console.log(hub)
+    dispatch(doUpdateHubs({...hub}));
+    handleClose();
+  };
+
+  const handleDispatchDelete = () => {
+    dispatch(doDeleteHubs({id:activeHub.id}));
+    handleClose();
+  };
+
+  return (
+    <>
+      <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+        <Menu />
         <div className="container mt-4">
-        <h1>Hub List</h1>
-
-        <button className="btn btn-success mb-3" onClick={handleCreateShow}>Add Hub</button>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">English</th>
-              <th scope="col">Russian</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            {hubs.map((hub) => (
-              <tr key={hub.id}>
-                <td>{hub.id}</td>
-                <td>{hub.en}</td>
-                <td>{hub.ru}</td>
-                <td>
-                  <div className="d-flex">
-                    <button className="btn btn-warning" style={{ marginRight: '10px' }} onClick={() => handleEditShow(hub)}>
-                      Edit
-                    </button>
-                    <button className="btn btn-error"  onClick={() =>handleDeleteHub(hub)}>
-                      Delete
-                    </button>
-                  </div>
-                </td>
+          <h1>Hub List</h1>
+          <button className="btn btn-success mb-3" onClick={handleCreate}>
+            Add Hub
+          </button>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">English</th>
+                <th scope="col">Russian</th>
+                <th scope="col">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <span id="message" style={{ display: 'none', marginTop: '10px' }}></span>
-  
-
-        {showEdit && (
-          <div className="modal show" style={{ display: 'block' }}>
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Edit Hub</h5>
-                  <button type="button" className="close" onClick={handleEditClose}>
-                    <span>&times;</span>
-                  </button>
-                </div>
-                <div className="modal-body">
-                  <form id="hubForm" action="/admin/hub/update" method="post">
-                    <input type="hidden" id="id" name="id" value={currentHub.id} />
-                    <div style={{ marginTop: '10px' }}>
-                      <label htmlFor="ru">Русский:</label>
-                      <input type="text" id="ru" name="ru" className="form-control" defaultValue={currentHub.ru} required />
+            </thead>
+            <tbody id="tableBody">
+              {hubs.map((hub) => (
+                <tr key={hub.id}>
+                  <td>{hub.id}</td>
+                  <td>{hub.en}</td>
+                  <td>{hub.ru}</td>
+                  <td>
+                    <div className="d-flex">
+                      <button
+                        className="btn btn-warning"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => handleEdit(hub)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(hub)}
+                      >
+                        Delete
+                      </button>
                     </div>
-                    <div style={{ marginTop: '10px' }}>
-                      <label htmlFor="en">English:</label>
-                      <input type="text" id="en" name="en" className="form-control" defaultValue={currentHub.en} required />
-                    </div>
-                    <div style={{ marginTop: '15px' }}>
-                      <button type="submit" className="btn btn-success">Сохранить</button>
-                      <button type="button" className="btn btn-secondary" onClick={handleEditClose} style={{ marginLeft: '10px' }}>Назад</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-  
-
-        {showCreate && (
-          <div className="modal show" style={{ display: 'block' }}>
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Create Hub</h5>
-                  <button type="button" className="close" onClick={handleCreateClose}>
-                    <span>&times;</span>
-                  </button>
-                </div>
-                <div className="modal-body">
-                  <form id="hubForm" action="/admin/hub/create" method="post">
-                    <input type="hidden" id="id" name="id" />
-                    <div style={{ marginTop: '10px' }}>
-                      <label htmlFor="ru">Русский:</label>
-                      <input type="text" id="ru" name="ru" className="form-control" required />
-                    </div>
-                    <div style={{ marginTop: '10px' }}>
-                      <label htmlFor="en">English:</label>
-                      <input type="text" id="en" name="en" className="form-control" required />
-                    </div>
-                    <div style={{ marginTop: '15px' }}>
-                      <button type="submit" className="btn btn-success">Сохранить</button>
-                      <button type="button" className="btn btn-secondary" onClick={handleCreateClose} style={{ marginLeft: '10px' }}>Назад</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <span
+            id="message"
+            style={{ display: "none", marginTop: "10px" }}
+          ></span>
+        </div>
       </div>
-    );
+
+      <Modal show={showCreate} handleClose={handleClose}>
+        <HubForm
+          item={{ id: 0, ru: "", en: "" }}
+          handleSaveProp={handleDispatchSave}
+        />
+      </Modal>
+
+      <Modal show={showEdit} handleClose={handleClose}>
+        <HubForm item={activeHub} handleSaveProp={handleDispatchEdit} />
+      </Modal>
+
+      <Modal show={showDelete} handleClose={handleClose}>
+      <div className="container mt-5">
+      <div className="card">
+        <div className="card-header">
+          <h5 className="card-title">Подтверждение удаления</h5>
+        </div>
+        <div className="card-body">
+          <p>Вы точно хотите удалить?</p>
+          <button 
+            type="button" 
+            className="btn btn-danger"
+            style={{marginRight:"20px"}} 
+            onClick={handleDispatchDelete}
+          >
+            Удалить
+          </button>
+          <button 
+            type="button" 
+            className="btn btn-secondary" 
+            onClick={handleClose}
+          >
+            Отмена
+          </button>
+        </div>
+      </div>
+    </div>
+      </Modal>
+    </>
+  );
 }
 
 export default Hubs;
