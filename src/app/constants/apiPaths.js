@@ -16,13 +16,24 @@ const apiPaths={
     article:{
         url:baseAmdin.concat("/article"),
         fetch:"/fetch",
-        status:"/status"
+        status:"/status",
+        find:base.concat("/article/find"),
+        del:"/del"
     },
     auth:{
         url:"http://"+BACKEND_HOST+"/api/v1".concat("/auth"),
         signin:"/signin",
         logout:"/logout"
     },
+    author:{
+        url:baseAmdin.concat("/author"),
+        fetch:"/fetch"
+    },
+    complaint:{
+        url:baseAmdin.concat("/complaints"),
+        fetch:"/fetch/article",
+        del:"/del/article"
+    }
  
 }
 

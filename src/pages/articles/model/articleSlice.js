@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { changeArtricleStatus, fetchArtricles } from "../api/request";
+import { changeArtricleStatus, deleteArtricle, fetchArtricles, findArticle } from "../api/request";
 import { domainNames } from "../../../app/constants/domainNames";
 
 
@@ -10,6 +10,8 @@ const initialState = {
     page:0,
     maxPage:0
   },
+  article:{},
+  findStatus:'idle',
   status: "idle",
   changeStatus:'idle',
   error: null,
@@ -22,6 +24,9 @@ const articleSlice = createSlice({
   initialState,
   reducers: {
 
+    manageArticleFindStatus(state,action){
+      state.findStatus = action.payload
+  },
     
   },
   extraReducers(builder) {
@@ -54,6 +59,34 @@ const articleSlice = createSlice({
         state.error = action.error.message;
       })
     //----------------------------------------
+      //---поиск статьи-------------
+      .addCase(findArticle.pending, (state, action) => {
+        state.findStatus = "loading";
+      })
+      .addCase(findArticle.fulfilled, (state, action) => {
+        state.findStatus = "succeeded";
+        state.article = action.payload
+       
+      })
+      .addCase(findArticle.rejected, (state, action) => {
+        state.findStatus = "failed";
+        state.error = action.error.message;
+      })
+    //----------------------------------------
+     //---удалить статью-------------
+     .addCase(deleteArtricle.pending, (state, action) => {
+      state.changeStatus = "loading";
+    })
+    .addCase(deleteArtricle.fulfilled, (state, action) => {
+      state.changeStatus = "succeeded";
+      state.page.items =  state.page.items.filter(item=>item.id!=action.payload)
+     
+    })
+    .addCase(deleteArtricle.rejected, (state, action) => {
+      state.changeStatus = "failed";
+      state.error = action.error.message;
+    })
+  //----------------------------------------
        
   },
 });
@@ -76,10 +109,19 @@ export function getPage(state) {
   export function getChangeArticleStatus(state) {
     return state[domainNames.ARTICLES].changeStatus;
   }
+  export function getFindArticleStatus(state) {
+    return state[domainNames.ARTICLES].findStatus;
+  }
+
+  export function getArticle(state) {
+    return state[domainNames.ARTICLES].article;
+  }
 
 
 
 
+
+  export const { manageArticleFindStatus } = articleSlice.actions;
 
 
 export default articleSlice.reducer;

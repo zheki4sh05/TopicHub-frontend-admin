@@ -5,24 +5,33 @@ import {
   getArticleStatus,
   getChangeArticleStatus,
   getFeed,
+  getFindArticleStatus,
   getMaxPage,
   getPage,
+  manageArticleFindStatus,
 } from "../model/articleSlice";
-import { changeArtricleStatus, fetchArtricles } from "../api/request";
+import { changeArtricleStatus, deleteArtricle, fetchArtricles, findArticle } from "../api/request";
 import "./style.css";
+import { useNavigate } from "react-router";
+import { PathConstants } from "../../../app/constants/pathConstants";
+import Modal from "../../../shared/modal/ui/Modal";
 function Articles() {
   const articles = useSelector(getFeed);
   const page = useSelector(getPage);
   const maxPage = useSelector(getMaxPage);
   const dispatch = useDispatch();
   const statusArticle = useSelector(getArticleStatus);
+  const findStatus = useSelector(getFindArticleStatus)
   const [status, setStatus] = useState(statusTypes.moderation);
+  const navigate = useNavigate()
+  const [open,setOpen] = useState(false)
+  const [activeArticle,setActiveArticle] = useState()
 const chStatus = useSelector(getChangeArticleStatus)
   const makeRequest = (page, status) => {
     dispatch(
       fetchArtricles({
         status: status,
-        page: 1,
+        page: page,
       })
     );
   };
@@ -51,6 +60,30 @@ const chStatus = useSelector(getChangeArticleStatus)
   useEffect(() => {
     makeRequest(0, status);
   }, []);
+
+  const handleOpenArticle=(id)=>{
+    // dispatch(findArticle({ articleId: id }));
+    navigate(`${PathConstants.ARTICLE}/${id}/${status}`)
+  }
+
+  // useEffect(()=>{
+  //   if(findStatus==statusTypes.succeeded){
+  //     dispatch(manageArticleFindStatus(statusTypes.idle))
+      
+      
+  //   }
+  // },[findStatus])
+
+  const handleArticleDelete=(id)=>{
+    dispatch(deleteArtricle({
+      id:activeArticle
+        }))
+        setOpen(false)
+  }
+
+  const handleDisagree=()=>{
+      setOpen(false)
+  }
 
   return (
     <div className="container mt-4">
@@ -113,7 +146,10 @@ const chStatus = useSelector(getChangeArticleStatus)
                         Open
                       </button>
 
-                      <button className="btn btn-danger" type="submit">
+                      <button className="btn btn-danger" type="submit" onClick={(event)=>{
+                        setOpen(true)
+                        setActiveArticle(article.id)
+                        }}>
                         Удалить
                       </button>
 
@@ -161,12 +197,14 @@ const chStatus = useSelector(getChangeArticleStatus)
           
         </tbody>
       </table>
-      {chStatus==statusTypes.loading ?
+      {chStatus==statusTypes.loading || findStatus ==statusTypes.loading ?
     <div className="spinner-border text-primary" role="status">
     <span className="visually-hidden">Loading...</span>
   </div>
   :
   null
+
+
     
     }
       {statusArticle == statusTypes.loading ? (
@@ -200,6 +238,39 @@ const chStatus = useSelector(getChangeArticleStatus)
           </li>
         </ul>
       </nav>
+      <Modal
+      
+      handleClose={handleDisagree}
+      show={open}
+      >
+           <div className="container mt-5">
+      <div className="card">
+        <div className="card-header">
+          <h5 className="card-title">Подтверждение удаления</h5>
+        </div>
+        <div className="card-body">
+          <p>Вы точно хотите удалить?</p>
+          <button 
+            type="button" 
+            className="btn btn-danger"
+            style={{marginRight:"20px"}} 
+            onClick={handleArticleDelete}
+          >
+            Удалить
+          </button>
+          <button 
+            type="button" 
+            className="btn btn-secondary" 
+            onClick={handleDisagree}
+          >
+            Отмена
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+      </Modal>
     </div>
   );
 }

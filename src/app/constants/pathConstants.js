@@ -3,7 +3,9 @@ export const PathConstants = {
     LOGIN:"/login",
     HUBS:"/hubs",
     ARTICLES:"/articles",
+    ARTICLE:"/article",
     AUTHORS:"/authors",
-    COMPLAINTS:"/complaints"
+    COMPLAINTS:"/complaints",
+    COMPLAINT:"/complaint"
 
 }

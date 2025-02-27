@@ -11,7 +11,8 @@ const statusTypes = {
     offline:"offline",
     moderation:"MODERATION",
     publish:"PUBLISH",
-    block:"BLOCK"
+    block:"BLOCK",
+    active:"ACTIVE"
 }
 
 export default statusTypes;
