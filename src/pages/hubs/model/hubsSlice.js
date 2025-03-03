@@ -4,11 +4,7 @@ import { domainNames } from "../../../app/constants/domainNames";
 
 //----state---
 const initialState = {
-  list: [{
-    id:"1",
-    ru:"ru",
-    en:"en"
-  }],
+  list: [],
   status: "idle",
   error: null,
 };

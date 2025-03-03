@@ -37,7 +37,7 @@ const chStatus = useSelector(getChangeArticleStatus)
   };
   const handleChangeStatus = (status) => {
     setStatus(status);
-    makeRequest(0, status);
+    makeRequest(1, status);
   };
   const handleArticleStatusChange = (articleId, event) => {
     dispatch(changeArtricleStatus({
@@ -58,7 +58,7 @@ const chStatus = useSelector(getChangeArticleStatus)
   };
 
   useEffect(() => {
-    makeRequest(0, status);
+    makeRequest(1, status);
   }, []);
 
   const handleOpenArticle=(id)=>{

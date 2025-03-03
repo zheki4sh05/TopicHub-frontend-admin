@@ -14,7 +14,9 @@ function Hubs() {
   const [showDelete, setDeleteEdit] = useState(false);
   const [activeHub, setActiveHub] = useState({});
   useEffect(()=>{
-    dispatch(fetchHubs())
+    if(hubs.length==0){
+      dispatch(fetchHubs())
+    }
   },[])
   const handleClose = () => {
     setShowEdit(false);
