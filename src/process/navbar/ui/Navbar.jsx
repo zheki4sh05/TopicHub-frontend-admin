@@ -25,7 +25,7 @@ function Navbar() {
                 </Link>
 
                 <div className="ml-auto">
-                  <a className="nav-link text-white">Вернуться в приложение</a>
+                  <a className="nav-link text-white" href={PathConstants.CLIENT}>Вернуться в приложение</a>
                 </div>
                 <div>
                   <LanguageSelect/>
